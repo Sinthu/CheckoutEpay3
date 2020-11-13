@@ -1,0 +1,126 @@
+﻿@using Newtonsoft.Json
+@model CheckoutEPay.Models.AuthoriseCardRequestModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<tr>
+    <th>
+        <h1>
+            Pay with Card
+            <img class="img" src="@Url.Content("~/Images/Visa.png")" alt="Images" />
+            <img class="img" src="@Url.Content("~/Images/Mastercard.png")" alt="Images" />
+            <img class="img" src="@Url.Content("~/Images/Amex.png")" alt="Images" />
+        </h1>
+    </th>
+</tr>
+
+
+@using (Html.BeginForm("PostAuthoriseCardRequestModel", "Payment", new { id = "myForm" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div asp-validation-summary="ModelOnly">
+        <span>Please fix the following errors</span>
+    </div>
+
+    <div class="padding">
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="card">
+                    <div class="card-header">
+                        <strong>Enter your card details</strong>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    @Html.DisplayNameFor(x => x.CardHolderName)
+                                    @Html.TextBoxFor(x => x.CardHolderName, new { @placeholder = "Card Owner Name", @class = "form-control" })
+                                    <span asp-validation-for="CardHolderName"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    @Html.DisplayNameFor(x => x.CardNumber)
+                                    @*<div class="input-group">*@
+                                        @Html.TextBoxFor(x => x.CardNumber, new { @placeholder = "0000 0000 0000 0000", @class = "form-control" })
+                                        <span asp-validation-for="CardNumber"></span>
+                                        @*@Html.ValidationMessageFor(x => x.CardNumber)*@
+                                    @*</div>*@
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group col-sm-4">
+                                @Html.DisplayNameFor(x => x.ExpiryMonth)
+                                @Html.TextBoxFor(x => x.ExpiryMonth, new { @placeholder = "MM", @class = "form-control" })
+                                @Html.ValidationMessageFor(x => x.ExpiryMonth)
+                            </div>
+
+                            <div class="form-group col-sm-4">
+                                @Html.DisplayNameFor(x => x.ExpiryYear)
+                                @Html.TextBoxFor(x => x.ExpiryYear, new { @placeholder = "YYYY", @class = "form-control" })
+                                @Html.ValidationMessageFor(x => x.ExpiryYear)
+                            </div>
+
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    @Html.DisplayNameFor(x => x.Cvv)
+                                    @Html.TextBoxFor(x => x.Cvv, new { @placeholder = "123", @class = "form-control" })
+                                    @Html.ValidationMessageFor(x => x.Cvv)
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-xs-5 col-md-5">
+                                    <div class="form-group">
+                                        @Html.DisplayNameFor(x => x.Currency)
+                                        @Html.TextBoxFor(x => x.Currency, new { @placeholder = "Eg.GBP", @class = "form-control" })
+                                        @Html.ValidationMessageFor(x => x.Currency)
+                                    </div>
+                                </div>
+
+                                <div class="col-xs-5 col-md-5 pull-right">
+                                    <div class="form-group">
+                                        @Html.DisplayNameFor(x => x.Amount)
+                                        @Html.TextBoxFor(x => x.Amount, new { @placeholder = "000", @class = "form-control" })
+                                        @Html.ValidationMessageFor(x => x.Amount)
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <br />
+
+                    <div class="card-footer">
+                        <p>
+                            <button id="btnPayNow" class="btn btn-sm btn-success float-right" type="submit"> Pay Now </button>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@if (ViewBag.Result == true)
+{
+    <div class="align-content-center">
+    <div> <label>Payment Successful </label> </div>
+    <div> <label>Your transaction ID for this payment: </label> @ViewBag.TransactionId </div>
+    </div>
+}
+
+@if (ViewBag.Result == false)
+{
+<div class="align-content-center">
+    <div><label> Payment Unsuccessful </label> </div>
+</div>
+}
